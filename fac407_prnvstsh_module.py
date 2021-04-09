@@ -9,6 +9,30 @@ import numpy as np
 import os
 import statistics
 import time
+from sklearn import linear_model
+import statsmodels.api as sm
+import math
+
+
+def HW2_Function():
+    data=pd.read_excel('HW5.xlsx',engine='openpyxl')
+    lm = linear_model.LinearRegression()
+    model = lm.fit(data[['Rmt*']],data[['Rjt*']])
+    data.plot(kind='scatter', x= 'Rjt*', y='Rmt*')
+    Stockrate= pd.DataFrame(data['Rjt*'])
+    Marketrate= pd.DataFrame(data['Rmt*'])
+    model=lm.fit(Marketrate,Stockrate)
+    print(lm.intercept_)
+    print(lm.coef_)
+    results = sm.OLS(Stockrate,Marketrate).fit()
+    print(results.summary()) 
+    Stockrate= pd.DataFrame(data['Rjt*'])
+    Marketrate= pd.DataFrame(data['Rmt*'])
+    Marketrate = sm.add_constant(Marketrate)
+    results = sm.OLS(Stockrate,Marketrate).fit()
+    print(results.summary()) 
+    print(results.conf_int())
+
 
 def normal_test_sw():
     abbot = pd.read_csv('ABBOTINDIA.NS.csv')
@@ -270,3 +294,6 @@ def correlation():
     print("mrf:shreecem_log:")
     print(mrf_shreecem_log)
     time.sleep(10)
+
+
+HW2_Function()
